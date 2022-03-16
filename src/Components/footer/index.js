@@ -2,7 +2,7 @@ import Container from "../container"
 
 const Footer = () => {
     return (
-        <div className="mt-auto bg-[#15b9d5]">
+        <div className="mt-auto bg-[#15b9d5] ">
             <Container>
                 <div className="flex mb-16 mt-4 justify-between">
                     <div>

@@ -10,7 +10,7 @@ const Home = () => {
                     <div className="text-center py-10">
                         <span className="text-2xl font-normal">How it works</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between pb-10">
                         <div className="p-3 text-center w-[30%]">
                             <div className="w-[100px] mx-auto">
                                 <img src="https://cdn-icons-png.flaticon.com/512/114/114734.png" alt="laptop" />
@@ -35,9 +35,9 @@ const Home = () => {
                     </div>
                 </Container>
             </div>
-            <Container>
+            {/* <Container>
                 <div className="h-[500px]"></div>
-            </Container>
+            </Container> */}
         </div>
     )
 }
