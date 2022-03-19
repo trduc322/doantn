@@ -31,7 +31,7 @@ const Approuter = ({user, laptops, brands}) => {
                     <Route path="register" element={<Register/>}/>
                     <Route path="brands" element={<Brands brands={brands}/>}/>
                     <Route path="branddetails/:id" element={<BrandDetails/>}/>
-                    <Route path="accountdetails" element={user? <AccountDetails user={user}/> : <SignIn/>}/>
+                    <Route path="accountdetails" element={user? <AccountDetails user={user} laptops={laptops}/> : <SignIn/>}/>
                 </Route>
             </Routes>
         </Router>

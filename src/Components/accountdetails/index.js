@@ -3,14 +3,17 @@ import Spinner from 'react-spinner-material'
 import callApi from '../../apiCaller'
 import Container from '../container'
 
-function AccountDetails({user}) {
+function AccountDetails({user, laptops}) {
   const [userData, setUserData] = useState({})
+  const [laptopData, setLaptopData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isNotEdit, setIsNotEdit] = useState(true)
+  const [imgBase64, setImgBase64] = useState()
   useEffect(() => {
     setUserData(user)
+    setLaptopData(laptops) 
     setIsLoading(false)
-  }, [user])
+  }, [user, laptops])
   const cancelClick = (e) => {
     e.preventDefault()
     setIsNotEdit(true)
@@ -24,7 +27,14 @@ function AccountDetails({user}) {
     const newData = {...userData}
     newData[e.target.name] = e.target.value
     setUserData(newData)
-    console.log(newData)
+  }
+  const getBase64 = (file) => {
+    return new Promise((resolve,reject) => {
+       const reader = new FileReader();
+       reader.onload = () => resolve(reader.result);
+       reader.onerror = error => reject(error);
+       reader.readAsDataURL(file);
+    });
   }
   const showPreview = (e) => {
     if(e.target.files && e.target.files[0]){
@@ -38,6 +48,9 @@ function AccountDetails({user}) {
             })
         }
         reader.readAsDataURL(imageFile)
+        getBase64(imageFile).then(base64 => {
+          setImgBase64(base64.replace(/^data:image\/[a-z]+;base64,/, ""))
+        })
     }
   }
   const saveClick = (e) => {
@@ -54,6 +67,7 @@ function AccountDetails({user}) {
           if(!alert("Profile updated")){
             window.location.reload()
           }
+          localStorage.setItem("user", JSON.stringify({...userData, ProfilePicture : imgBase64}))
         }
       })
     }

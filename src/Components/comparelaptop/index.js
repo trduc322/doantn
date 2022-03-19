@@ -250,13 +250,13 @@ const CompareLaptop = ({ laptops }) => {
                 <tbody>
                   {compareSpecs.map((item, index) => (
                         <tr key={index} className="text-left">
-                          <td className="bg-[#e7e3e3] p-3 border-2 border-white">
+                          <td className="bg-[#e7e3e3] p-3 border-2 border-white w-4/12">
                             {item.LaptopSpecValue1}
                           </td>
-                          <td className="bg-[#e7e3e3] p-3 border-2 border-white">
+                          <td className="bg-[#e7e3e3] p-3 border-2 border-white w-4/12">
                             {item.LaptopSpecValue2}
                           </td>
-                          <td className="bg-[#b8b4b4] p-3 border-2 border-white w-72 font-semibold">
+                          <td className="bg-[#b8b4b4] p-3 border-2 border-white w-3/12 font-semibold">
                             {item.LaptopSpecName}
                           </td>
                         </tr>

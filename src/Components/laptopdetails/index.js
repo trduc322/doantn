@@ -46,6 +46,8 @@ const LaptopDetails = ({user, laptops}) => {
   const [loadLaptopData, setLoadLaptopData] = useState(true)
   const [ratingLoading, setRatingLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+  const [favorite, setFavorite] = useState({})
+  const [isFavorite, setIsFavorite] = useState(false)
   useEffect(() => {
     // Promise.all([
     //   callApi(`Laptop/${id}`, "GET", null),
@@ -132,6 +134,30 @@ const LaptopDetails = ({user, laptops}) => {
       setRatingLoading(false)
     }
   },[id])
+  useEffect(()=>{
+    if(user && user !== null){
+      let body = {
+        UserId: user.UserId,
+        LaptopId: id
+      }
+      callApi(`Favorite/getfavorite`, "POST", body).then(res => {
+        if(res.status === 200){
+          if(res.data != null){
+            setIsFavorite(true)
+            setFavorite(res.data)
+            setIsLoading(false)
+          }
+          else{
+            setIsFavorite(false)
+            setIsLoading(false)
+          }
+        }
+      })
+    }
+    else{
+      setIsLoading(false)
+    }
+  },[id])
   const ratingHandler = (index) => {
     if(!user || user === null) {
       if(window.confirm("Please login to rate a product")){
@@ -165,11 +191,21 @@ const LaptopDetails = ({user, laptops}) => {
         UserId : user.UserId,
         LaptopId : id
       }
-      callApi(`Favorite`, "POST", f).then(res => {
-        if(res.status === 200){
-          
-        }
-      })
+      if(isFavorite) {
+        callApi(`Favorite/${favorite.FavoriteId}`, "DELETE", null).then(res => {
+          if(res.status === 200){
+            setFavorite(false)
+          }
+        })
+      }
+      else{
+        callApi(`Favorite`, "POST", f).then(res => {
+          if(res.status === 200){
+            setIsFavorite(true)
+            setFavorite(res.data)
+          }
+        })
+      } 
     }
   }
   return (
@@ -190,14 +226,14 @@ const LaptopDetails = ({user, laptops}) => {
                 alt=""
               />
               <div className="flex justify-between">
-                <button className="self-end flex gap-3 border-2 pl-2 pr-5 py-1 rounded-lg hover:bg-pink-400 hover:text-white" onClick={handleFavorite}>
+                {!isLoading ? <button className={`self-end flex gap-3 border-2 pl-2 pr-5 py-1 rounded-lg ${isFavorite? "bg-pink-400 text-white" : ""}`} onClick={handleFavorite}>
                   <img
                     className="w-12 h-12"
                     src="https://img.icons8.com/plasticine/100/000000/like--v2.png"
                     alt="/"
                   />
                   <p className="self-center text-xl">Favorite</p>
-                </button>
+                </button> : <div className="m-auto my-3"><Spinner radius={30} color={"#15b9d5"} stroke={5} visible={true} /></div>}
                 <p className="self-center text-xl font-semibold">Rating: {laptopData.Rating && laptopData.Rating>0 ? laptopData.Rating : "This product is not yet rated"}</p>
                 <div className="">
                   <p className="mt-5 text-sm">Rate this product</p>
