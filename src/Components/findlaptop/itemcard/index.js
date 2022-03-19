@@ -6,7 +6,6 @@ const ItemCard = ({id, name, price, image}) => {
         className="text-center hover:border-2 rounded-md p-3 bg-white"
         onClick={() => {
           navigate(`/laptopdetails/${id}`);
-          window.location.reload();
         }}
       >
         <img

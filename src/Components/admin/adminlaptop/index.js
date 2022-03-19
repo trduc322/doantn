@@ -2,20 +2,25 @@ import React, { useState, useEffect } from 'react'
 import Container from '../../container'
 import callApi from '../../../apiCaller'
 import AdminLaptopDetail from './adminlaptopdetails'
-function AdminLaptop() {
-  const [laptops, setLaptops] = useState([])
+import Spinner from 'react-spinner-material'
+function AdminLaptop({laptops, brands}) {
+  const [laptopList, setLaptopList] = useState([])
+  const [brandList, setBrandList] = useState([])
   const [laptopData, setLaptopData] = useState({})
   const [isSelected, setIsSelected] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
-    callApi(`LaptopSpec`,"GET",null).then(res => {
-        setLaptops(res.data)
-    })
-  }, [])
+    setLaptopList(laptops)
+    setBrandList(brands)
+    setIsLoading(false)
+  }, [laptops, brands])
   const handleClick = (e) => {
     setIsSelected(true)
-    setLaptopData(laptops.filter(l => l.LaptopId === e.target.id))
+    const laptopDetails = laptopList.find(l => l.LaptopId === e.target.id)
+    setLaptopData(laptopDetails)
   }
   return (
+    !isLoading?
     <div className='mt-3'>
         <Container>
             <div className='bg-white p-5 rounded'>
@@ -30,7 +35,7 @@ function AdminLaptop() {
                     </tr>
                 </thead>
                 <tbody className=''>
-                {laptops.map(item => 
+                {laptopList.map(item => 
                         <tr key = {item.LaptopId}>
                             <td className='bg-white border px-8 py-4'>{item.LaptopId}</td>
                             <td className='bg-white border px-8 py-4'>{item.LaptopModel}</td>
@@ -43,9 +48,11 @@ function AdminLaptop() {
                 </tbody>
             </table>
             </div>
-            {isSelected? <AdminLaptopDetail laptopData = {laptopData}/> : null}
+            {isSelected? <AdminLaptopDetail laptopData = {laptopData} brands = {brandList}/> : null}
         </Container>
     </div>
+    :
+    <div className="m-auto"><Spinner radius={100} color={"#15b9d5"} stroke={10} visible={true} /></div> 
   )
 }
 

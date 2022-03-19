@@ -1,21 +1,22 @@
 import Container from "../container"
 import ItemCard from "./itemcard"
 import callApi from "../../apiCaller";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import SideBar from "./sidebar";
 import { useNavigate } from "react-router-dom";
-const FindLaptop = () => { 
+import Spinner from 'react-spinner-material';
+const FindLaptop = ({laptops}) => {
     const [laptopList, setLaptopList] = useState([])
-    
     const [suggestion, setSuggestion] = useState([])
-    const [sortAscending, setSortAscending] = useState(true)
     const [text, setText] = useState('')
+    const [sortAscending, setSortAscending] = useState(true)
+    
+    const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
     useEffect(() => {
-        callApi(`LaptopSpec`,"GET",null).then(res => {
-            setLaptopList(res.data)
-        })
-    }, [])
+        setLaptopList(laptops)
+        setIsLoading(false)
+    }, [laptops])
     const handleChange = (e) => {
         let matches = []
         if(e.target.value.length>0){
@@ -36,6 +37,7 @@ const FindLaptop = () => {
     }
     //console.log(laptopList)
     return (
+        !isLoading?
         <div>
             <Container>
                 <div className="grid grid-cols-12">
@@ -54,24 +56,26 @@ const FindLaptop = () => {
                                 )}
                             </div>
                             <div className="w-full text-right">
-                                <select className="px-5 py-2 ml-5 rounded" onChange={handleSort}>
+                                <select className="pl-4 pr-10 py-2 ml-5 rounded" onChange={handleSort}>
                                     <option value= "" selected disabled hidden>Sort by</option>
                                     <option value="LaptopPrice">Price</option>
                                     <option value="LaptopModel">Model</option>
                                 </select>
-                                    <select className="px-5 py-2 ml-3 rounded " onChange={handleOrder}>
+                                    <select className="pl-4 pr-10 py-2 ml-3 rounded " onChange={handleOrder}>
                                     <option value="lowest">Lowest</option>
                                     <option value="highest">Highest</option>
                                 </select>
                             </div> 
                         </div>
                         <div className="grid grid-cols-4 gap-4 ">
-                        {laptopList.map(item => <ItemCard id={item.LaptopId} name = {item.LaptopModel} price={item.LaptopPrice} image= {item.LaptopImg}/>)}
+                        {laptopList && laptopList.map(item => <ItemCard id={item.LaptopId} name = {item.LaptopModel} price={item.LaptopPrice} image= {item.LaptopImg}/>)}
                         </div>
                     </div>
                 </div>
             </Container>
         </div>
+        :
+        <div className="m-auto"><Spinner radius={100} color={"#15b9d5"} stroke={10} visible={true} /></div> 
     )
     
 }

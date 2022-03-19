@@ -7,6 +7,7 @@
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
     "@hookform/resolvers": "^2.8.8",
+    "@tailwindcss/forms": "^0.5.0",
     "@tailwindcss/jit": "^0.1.18",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -23,6 +24,7 @@
     "react-scripts": "4.0.3",
     "react-select": "^5.2.2",
     "react-simple-star-rating": "^4.0.5",
+    "react-spinner-material": "^1.4.0",
     "web-vitals": "^1.0.1",
     "yup": "^0.32.11"
   },

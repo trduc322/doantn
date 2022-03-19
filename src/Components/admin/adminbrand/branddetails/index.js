@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import callApi from '../../../../apiCaller'
 import Container from '../../../container'
 
-function BrandDetail(props) {
+function BrandDetail({brand}) {
   const [data, setData] = useState({})
   const [isValid, setIsValid] = useState(true)
     useEffect(() => {
-    setData(props.brand[0])
-  }, [props])
+    setData(brand)
+  }, [brand])
   const handleUpdate = (e) => {
       e.preventDefault()
     if(!data.BrandName){

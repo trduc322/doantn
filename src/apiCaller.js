@@ -5,13 +5,23 @@ import { loginFailure, loginStart, loginSuccess} from './Context/authContext/Aut
 export default function callApi(endpoint, method, body){
     return axios({
         method: method,
-        url: `https://datn-api-trduc.herokuapp.com/api/${endpoint}`,
+        url: `https://localhost:44383/api/${endpoint}`,
         data: body,
       }).catch((err) => {
           console.log(err);
         });
         
 }
+// export default function callApi(endpoint, method, body){
+//   return axios({
+//       method: method,
+//       url: `https://datn-api-trduc.herokuapp.com/api/${endpoint}`,
+//       data: body,
+//     }).catch((err) => {
+//         console.log(err);
+//       });
+      
+// }
 export const login = async (user, dispatch) => {
   dispatch(loginStart())
   try{

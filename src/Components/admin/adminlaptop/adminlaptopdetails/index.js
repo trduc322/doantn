@@ -2,9 +2,11 @@ import React, { useEffect, useState, useReducer } from 'react'
 import callApi from '../../../../apiCaller'
 import Container from '../../../container'
 import {laptopSchema, specSchema} from '../../../../Validations/LaptopValidation'
-function AdminLaptopDetail(props) {
+import Spinner from 'react-spinner-material'
+function AdminLaptopDetail({laptopData, brands}) {
     const [data, setData] = useState({})
-    const [brands, setBrands] = useState([])
+    const [brandList, setBrandList] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const laptop = {
         LaptopId : '',
         LaptopModel : '',
@@ -40,28 +42,15 @@ function AdminLaptopDetail(props) {
     // useEffect(() => {
     //   loadData()
     // }, [loadData])
-    
+    useEffect(()=>{
+        setData(laptopData)
+        setBrandList(brands.filter(b => b.BrandId != laptopData.BrandId))
+        setSpecs(laptopData.laptopSpecs)
+        setIsLoading(false)
+    },[laptopData, brands])
     useEffect(() => {
-        updateLData((({LaptopId, LaptopModel, LaptopPrice, BrandId, LaptopImg, LaptopImgFile}) => ({LaptopId, LaptopModel, LaptopPrice, BrandId, LaptopImg, LaptopImgFile}))(props.laptopData[0]))
-    }, [props])
-    useEffect(() => {
-        let getBrands = {...brands}
-        callApi(`Brand`,"GET", null).then(res => {
-            getBrands = res.data
-        })
-        const interval = setInterval(()=> {
-            getBrands = getBrands.filter(item => item.BrandId != props.laptopData[0].brand.BrandId)
-            //getLaptop = (({ LaptopModel, LaptopPrice }) => ({ LaptopModel, LaptopPrice }))(props.laptopData[0])
-            setData(props.laptopData[0])
-            setBrands(getBrands)
-            //setLaptop(getLaptop)
-            setSpecs(props.laptopData[0].laptopSpecs)
-        }, 500)
-        return () => {
-           
-            clearInterval(interval)
-        }
-    }, [props])
+        updateLData((({LaptopId, LaptopModel, LaptopPrice, BrandId, LaptopImg, LaptopImgFile}) => ({LaptopId, LaptopModel, LaptopPrice, BrandId, LaptopImg, LaptopImgFile}))(laptopData))
+    }, [laptopData])
     const laptopDataChangeHandler = (e) =>{
         const {name, value} = e.target
         updateLData({[name] : value})   
@@ -143,6 +132,7 @@ function AdminLaptopDetail(props) {
         }
     }
   return (
+      !isLoading?
     <div className='bg-white mt-5 p-5 rounded'>
         <span className='text-3xl'>Details</span>
         <Container>
@@ -166,7 +156,7 @@ function AdminLaptopDetail(props) {
                             <p className='text-xl'>Laptop Brand: </p>
                             <select name="BrandId" className="mt-3 w-2/3 px-3 py-1 border-2 hover:border-[#15b9d5] border-[#e3f5f8] rounded-md" onChange = {laptopDataChangeHandler}>
                                 <option value={lData? lData.BrandId : ''}>{data.brand? data.brand[0].BrandName : ''}</option>
-                                {brands && brands.map(item => 
+                                {brandList && brandList.map(item => 
                                     <option key={item.BrandId} value={item.BrandId}>{item.BrandName}</option>
                                     )}
                             </select>
@@ -180,7 +170,7 @@ function AdminLaptopDetail(props) {
                 <div className='mt-5'>
                     <span className='text-xl'>Specifications: </span>
                     <div className='grid grid-cols-2'>
-                        {data.laptopSpecs && data.laptopSpecs.map(item => 
+                        {specs && specs.map(item => 
                         <div key = {item.LaptopSpecId} className=''>
                             <p className='text-xl'>{item.LaptopSpecName}: </p>
                             <input id={item.LaptopSpecId} type="text" className="mt-3 w-2/3 px-3 py-1 border-2 border-[#e3f5f8] rounded-md" value={data? item.LaptopSpecValue : ""} onChange = {specDataChangeHandler}/>
@@ -195,6 +185,8 @@ function AdminLaptopDetail(props) {
             </form>
         </Container>
     </div>
+    :
+    <div className="m-auto"><Spinner radius={100} color={"#15b9d5"} stroke={10} visible={true} /></div> 
   )
 }
 

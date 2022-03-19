@@ -2,26 +2,27 @@ import React, { useState, useEffect } from 'react'
 import callApi from '../../../apiCaller'
 import Container from '../../container'
 import BrandDetail from './branddetails';
+import Spinner from 'react-spinner-material';
 
-function AdminBrand() {
-    const [brands, setBrands] = useState([])
+function AdminBrand({brands}) {
+    const [brandList, setBrandList] = useState([])
     const [openDetail, setOpenDetail] = useState(false);
+    const [isLoading, setIsLoading] = useState(true)
     //const [id, setId] = useState('');
     const [brandData, setBrandData] = useState({})
     useEffect(() => {
-        callApi(`Brand`,"GET",null).then(res => {
-            setBrands(res.data)
-        })
-    }, [])
+        setBrandList(brands)
+        setIsLoading(false)
+    }, [brands])
     const handleClick = (e) => {
-        let id = e.target.id
-        callApi(`Brand/${id}`, "GET", null).then(res =>{
-            setBrandData(res.data)
-        })
+        const brandDetails = brandList.find(b => b.BrandId == e.target.id)
+        console.log(brandDetails)
+        setBrandData(brandDetails)
         setOpenDetail(true)
     }
     
   return (
+    !isLoading?
     <div className=''>
         <Container>
             <div className='bg-white p-5 rounded'>
@@ -36,7 +37,7 @@ function AdminBrand() {
                     </tr>
                 </thead>
                 <tbody className=''>
-                {brands.map(item => 
+                {brandList.map(item => 
                         <tr key = {item.BrandId}>
                             <td className='bg-white border px-8 py-4'>{item.BrandId}</td>
                             <td className='bg-white border px-8 py-4'>{item.BrandName}</td>
@@ -49,9 +50,11 @@ function AdminBrand() {
                 </tbody>
             </table>
             </div>
-            {openDetail? <BrandDetail brand = {brandData}/> : null}
+            {!isLoading && openDetail? <BrandDetail brand = {brandData}/> : null}
         </Container>
     </div>
+    :
+    <div className="m-auto"><Spinner radius={100} color={"#15b9d5"} stroke={10} visible={true} /></div> 
   )
 }
 

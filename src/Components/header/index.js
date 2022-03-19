@@ -36,18 +36,21 @@ const Header = ({ user }) => {
   };
   const handleLogout = () => {
     dispatch(logout());
-    setTimeout(() => navigate("/"), 500);
+    setTimeout(() => {
+      navigate("/") 
+      window.location.reload()
+    }, 500);
   };
   const navigate = useNavigate();
   const classNames = (...classes) => {
     return classes.filter(Boolean).join(" ");
   };
   return (
-    <div className="py-5 bg-[#15b9d5]">
+    <div className="py-5 bg-[#15b9d5] z-10">
       <Container>
         <div className="flex justify-between items-center">
           <div
-            className="text-4xl text-[#e26e2c] font-bold cursor-pointer"
+            className="text-4xl text-white font-bold cursor-pointer"
             onClick={() => {
               navigate("/");
             }}

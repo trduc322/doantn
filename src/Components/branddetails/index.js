@@ -5,18 +5,21 @@ import { useNavigate, useParams } from "react-router-dom"
 import callApi from '../../apiCaller';
 import BrandSideBar from './brandsidebar';
 import ItemCard from '../findlaptop/itemcard';
+import Spinner from 'react-spinner-material';
 function BrandDetails() {
   let params = useParams();
   const [id] = useState(params.id);
   const [brand, setBrand] = useState({})
   const [suggestion, setSuggestion] = useState([])
   const [text, setText] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
   const navigate = useNavigate()
   useEffect(()=> {
     callApi(`Brand/${id}`, "GET", null).then(res => {
       setBrand(res.data[0])
+      setIsLoading(false)
     })
-  },[])
+  },[id])
   const handleChange = (e) => {
     let matches = []
     if(e.target.value.length>0){
@@ -36,6 +39,7 @@ const handleOrder = (e) => {
     
 }
   return (
+    !isLoading ?
     <div>
         <Container>
         <div className="grid grid-cols-12">
@@ -61,12 +65,12 @@ const handleOrder = (e) => {
                                 )}
                             </div>
                             <div className="w-full text-right">
-                                <select className="px-5 py-2 ml-5 rounded" onChange={handleSort}>
+                                <select className="pl-4 pr-10  py-2 ml-5 rounded" onChange={handleSort}>
                                     <option value= "" selected disabled hidden>Sort by</option>
                                     <option value="LaptopPrice">Price</option>
                                     <option value="LaptopModel">Model</option>
                                 </select>
-                                    <select className="px-5 py-2 ml-3 rounded " onChange={handleOrder}>
+                                    <select className="pl-4 pr-10  py-2 ml-3 rounded " onChange={handleOrder}>
                                     <option value="lowest">Lowest</option>
                                     <option value="highest">Highest</option>
                                 </select>
@@ -79,6 +83,8 @@ const handleOrder = (e) => {
                 </div>
         </Container>
     </div>
+    :
+    <div className="m-auto"><Spinner radius={100} color={"#15b9d5"} stroke={10} visible={true} /></div> 
   )
 }
 
