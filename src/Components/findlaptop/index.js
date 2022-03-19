@@ -35,7 +35,6 @@ const FindLaptop = ({ laptops }) => {
     setLaptopList(sortData);
   };
   const handleOrder = (e) => {};
-  //console.log(laptopList)
   return(
     !isLoading ?
     <div>
